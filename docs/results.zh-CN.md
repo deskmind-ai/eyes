@@ -1,0 +1,93 @@
+# 成绩 · [English](results.md)
+
+所有数字都是我们自己跑的。[`results/eval_summary.md`](../results/eval_summary.md) 和 [`results/eval_summary.csv`](../results/eval_summary.csv) 由逐条评测输出生成，覆盖本文引用的每一次评测。
+
+## 评测协议
+
+- **环境。** 单张 GPU、vLLM 0.19、bf16、greedy 解码、截图保持原始分辨率（`eval_vllm`）。
+- **Prompt。** Qwen3-VL `computer_use` 工具调用 prompt（`--prompt-style tool`），答案是一次带 0–1000 坐标的 `left_click`。
+- **判分。** 点落在目标框内算对。
+- **放大 0.5**（`--zoom 0.5`）是第二次前向，也就是 KV-Ground 和 GUI-Owl 所说的 zoom：以第一次的预测为中心，裁出宽高各一半的区域（碰到边界就截断），放大回原图尺寸，再预测一次，然后把点映射回原图。
+- **配对检验。** 每组对比都在同一批题目上逐条配对。`+` / `−` 是只有一方答对的题数；z = (+ − −) / √(+ + −)，即 McNemar 统计量。|z| ≥ 2 视为显著。
+- **平台差异是真实存在的。** 同一份权重换一种 GPU 和推理栈，ScreenSpot-Pro 能差 0.5–0.9；分辨率较低的 ScreenSpot-v2 上没有差异。所以我们只在同一环境内做比较。
+
+## Eyes-4B
+
+### ScreenSpot-Pro 全集（1,581 条）
+
+| 不放大 | CAD text | CAD icon | Creative text | Creative icon | Dev text | Dev icon | OS text | OS icon | Office text | Office icon | Scientific text | Scientific icon | **平均** |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| GUI-Owl-1.5-4B 基座 | 59.4 | 39.1 | 72.7 | 41.3 | 82.5 | 51.0 | 81.3 | 49.4 | 85.9 | 49.1 | 85.4 | 41.8 | 64.8 |
+| KV-Ground-4B | 57.4 | 39.1 | 77.3 | 46.9 | 81.8 | 49.0 | 74.8 | 51.7 | 88.1 | 54.7 | 88.2 | 47.3 | 66.1 |
+| **Eyes-4B** | 62.4 | 43.8 | 77.3 | 44.8 | 84.4 | 51.7 | 80.4 | 51.7 | 89.3 | 56.6 | 88.2 | 46.4 | **67.7** |
+
+| 放大 0.5 | CAD text | CAD icon | Creative text | Creative icon | Dev text | Dev icon | OS text | OS icon | Office text | Office icon | Scientific text | Scientific icon | **平均** |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| GUI-Owl-1.5-4B 基座 | 83.8 | 59.4 | 81.8 | 56.6 | 87.7 | 59.3 | 79.4 | 66.3 | 92.1 | 75.5 | 89.6 | 55.5 | 76.2 |
+| **Eyes-4B** | 82.2 | 59.4 | 83.8 | 56.6 | 88.3 | 62.8 | 83.2 | 66.3 | 93.2 | 77.4 | 91.0 | 60.9 | **77.5** |
+
+| 配对比较 | + | − | z |
+|---|---|---|---|
+| Eyes-4B 对比基座，不放大 | 81 | 34 | 4.38 |
+| Eyes-4B 对比 KV-Ground-4B，不放大 | 68 | 42 | 2.48 |
+| Eyes-4B 对比基座，放大 0.5 | 74 | 52 | 1.96 |
+
+- **错题互补。** KV-Ground-4B 在 Creative 类 icon 上更强；我们在 text 类和较大的目标上更强。两者「任一答对」就算对的话，Pro 能到 70.4。这说明高分辨率下的小目标是补数据最有价值的方向。
+- **其他模型在各自环境里的自报数字：**
+  - KV-Ground-4B：67.0（我们环境里 66.1）；
+  - GUI-Owl-1.5-4B：66.8；
+  - Qwen-UI-Agent-4B：67.8（未开放权重，我们无法复测）。
+
+### ScreenSpot-v2（1,272 条）和 UI-Vision（5,479 条）
+
+| ScreenSpot-v2 | mobile text | mobile icon | desktop text | desktop icon | web text | web icon | **平均** |
+|---|---|---|---|---|---|---|---|
+| GUI-Owl-1.5-4B 基座 | 98.3 | 89.1 | 95.4 | 85.0 | 95.7 | 88.7 | 92.8 |
+| **Eyes-4B** | 99.3 | 91.5 | 97.4 | 88.6 | 97.0 | 92.1 | **95.0** |
+
+配对：+30 / −3，z = 4.7。
+
+| UI-Vision 元素定位 | basic text | basic icon | functional text | functional icon | spatial text | spatial icon | **平均** |
+|---|---|---|---|---|---|---|---|
+| GUI-Owl-1.5-4B 基座 | 66.9 | 32.7 | 58.5 | 31.2 | 45.9 | 12.6 | 30.7 |
+| Eyes-4B-DAPO（未用 GroundCUA） | 72.0 | 33.8 | 64.2 | 33.7 | 45.9 | 13.1 | **32.5** |
+| Eyes-4B（最终版）¹ | 73.9 | 34.6 | 68.4 | 33.8 | 47.3 | 12.8 | 33.1 |
+
+配对，DAPO 对比基座：+228 / −128，z = 5.3。
+
+¹ 这个数不干净。UI-Vision 的所有 app 都出现在 GroundCUA 里，而最后一轮是在 GroundCUA 上训练的；GroundCUA 论文也没有提到对截图做过去重。ScreenSpot-Pro（商业软件）和 ScreenSpot-v2 不受影响。`deskmind_eyes.dedup_uivision` 可以找出两个数据集之间近似重复的截图。
+
+### 从 64.8 到 67.7（Pro，不放大）
+
+| 步骤 | Pro | 增量 |
+|---|---|---|
+| GUI-Owl-1.5-4B-Instruct，不训练 | 64.8 | |
+| GRPO，40 步，5.4K 条难度池 | 65.8 | +1.0 |
+| 改用 DAPO 式动态采样，40 步，同一个池 | 66.7 | +0.9 |
+| 在 GroundCUA 池上继续动态采样，2.5M 像素，40 步 | **67.7** | +1.0 |
+
+GRPO 和 DAPO 两轮都从基座开始；GroundCUA 这一轮接着 DAPO 的 adapter 训练。细节见 [training.zh-CN.md](training.zh-CN.md)。
+
+**试过但没有提升的：**
+- **checkpoint 权重平均：** DAPO 66.9 vs 66.7，GroundCUA 67.6 vs 67.7。
+- **GUI-Owl 官方评测 prompt**（官方 system prompt，图片上限 9,800 个视觉 token）：在我们的推理栈上基座反而降到 63.2，复现不出 GUI-Owl 自报的 66.8。
+
+## 早期阶段：在 Tinker 上训练 Qwen3.5-4B
+
+换基座之前，我们在 [Tinker](https://thinkingmachines.ai/tinker/) 上对 Qwen3.5-4B 做了 SFT 和 RL。这些数字用的是我们的 `point_2d` prompt 和 Tinker 采样，只适合相互比较。
+
+| Pro，原始分辨率 | JPEG 传图 | 无损传图 |
+|---|---|---|
+| Qwen3.5-4B 基座 | 52.9 | 58.1 |
+| RL，难度过滤池，第 20 步 | 59.8 | 61.9 |
+| RL，动态采样，第 30 步 | 59.6 | 63.2 |
+
+- **传图方式有影响。** 最早的评测把截图压成质量 75 的 JPEG 再发送，基座在 Pro 上因此少了 5 分。`deskmind_eyes.image_encoding` 改为发送 PNG 或 4:4:4 高质量 JPEG。ScreenSpot-v2 几乎不受影响（91.3 → 91.1）。
+- **ScreenSpot-v2，JPEG 传图：** 基座 91.3；难度过滤 RL 93.5；动态采样 94.0。
+- **提升和输出格式绑定。** 换成社区版 ScreenSpot-Pro 适配器（工具调用 prompt）后，难度过滤 RL 相对基座只涨 +2.2（49.0 → 51.1）；在训练所用的 prompt 下是 +6.9。
+- **基座最重要。** Qwen3.5-4B 最好的一次（63.2，Tinker）仍低于不训练的 GUI-Owl-1.5-4B（64.8，vLLM）。评测环境不同，但换基座显然是单步最大的提升。
+
+## 文件
+
+- `results/eval_summary.md`、`results/eval_summary.csv`：每一次评测，按组列出分项准确率，以及上文的配对比较。
+- `results/training/<run>/`：Qwen3.5-4B 在 Tinker 上各次训练的配置和逐步指标（`metrics.csv`）。

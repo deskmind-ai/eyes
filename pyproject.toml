@@ -1,0 +1,37 @@
+[project]
+name = "deskmind-eyes"
+version = "0.1.0"
+description = "Screenshot to point: a small GUI grounding model and its SFT / RL recipe"
+requires-python = ">=3.12"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
+authors = [{name = "The DeskMind authors"}]
+readme = "README.md"
+keywords = ["gui-grounding", "computer-use", "screenspot", "reinforcement-learning", "vision-language-model"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "tinker==0.29.0",
+    "tinker-cookbook==0.5.7",
+    "pillow",
+]
+
+[project.urls]
+Homepage = "https://github.com/deskmind-ai/eyes"
+Repository = "https://github.com/deskmind-ai/eyes"
+Issues = "https://github.com/deskmind-ai/eyes/issues"
+
+[project.optional-dependencies]
+test = ["pytest>=8"]
+# Local Apple Silicon eval (deskmind_eyes/eval_mlx.py). Alternatively: `uv tool install mlx-vlm`.
+mlx = ["mlx-vlm>=0.7.1"]
+
+[tool.setuptools]
+packages = ["deskmind_eyes"]
+
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"

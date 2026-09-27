@@ -1,0 +1,6 @@
+DeskMind Eyes
+Copyright 2026 The DeskMind authors
+
+The code downloads third-party datasets (ScreenSpot, ScreenSpot-v2, ScreenSpot-Pro, UI-Vision, ShowUI, OS-Atlas,
+GroundCUA) and base models (Qwen3.5, GUI-Owl-1.5) from their sources at runtime. They are not redistributed here and
+remain under their own licences.
