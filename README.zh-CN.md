@@ -73,9 +73,10 @@ uv sync --extra mlx                     # Python 3.12；mlx 扩展用于 Apple S
 uv run python -m deskmind_eyes.prepare_data --only screenspot_pro     # 下载并逐张校验图片
 ```
 
-**本地定位服务**（Apple Silicon）。Eyes-4B 权重暂未公开。可以按 [docs/training.zh-CN.md](docs/training.zh-CN.md) 自己训练得到，也可以先把 `--model` 指向 GUI-Owl-1.5-4B-Instruct 的任意 MLX 转换版来试用：
+**本地定位服务**（Apple Silicon）。Eyes-4B 权重在 Hugging Face 上：[deskmind/eyes-4b](https://huggingface.co/deskmind/eyes-4b)，`main` 分支是 bf16，`mlx-4bit` 分支是 4-bit MLX 转换版。正式发布前该仓库为私有，可申请访问。也可以按 [docs/training.zh-CN.md](docs/training.zh-CN.md) 自己训练得到，或者先把 `--model` 指向 GUI-Owl-1.5-4B-Instruct 的任意 MLX 转换版来试用：
 
 ```bash
+uv run hf download deskmind/eyes-4b --revision mlx-4bit --local-dir models/eyes-4b-mlx
 uv run python -m deskmind_eyes.ground_server --model models/eyes-4b-mlx --port 8010
 curl -s localhost:8010/ground -H 'Content-Type: application/json' \
   -d '{"image": "/abs/path/to/screenshot.png", "queries": {"send": "the send message button"}}'
@@ -96,7 +97,7 @@ uv run python -m deskmind_eyes.compare runs/eval/base.jsonl runs/eval/candidate.
 ## 训练
 
 见 [docs/training.zh-CN.md](docs/training.zh-CN.md)，内容包括：
-- 数据来源：ShowUI-desktop、改写过指令的 OS-Atlas desktop、GroundCUA；
+- 数据来源：ShowUI-desktop、[改写过指令的 OS-Atlas desktop](docs/training.zh-CN.md#数据)（披露说明见该节）、GroundCUA；
 - 难度打分和动态采样；
 - 从 64.8 到 67.7 的三轮 RL；
 - 试过但没用的做法。

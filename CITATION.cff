@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+message: "If you use DeskMind Eyes or the Eyes-4B weights, please cite it as below."
+title: "DeskMind Eyes: screen grounding for computer-use agents"
+type: software
+authors:
+  - name: "The DeskMind authors"
+repository-code: "https://github.com/deskmind-ai/eyes"
+url: "https://huggingface.co/deskmind/eyes-4b"
+license: Apache-2.0
+version: 0.1.0
+date-released: "2026-09-28"
+keywords:
+  - computer-use
+  - gui-grounding
+  - screenspot
+  - vision-language-model

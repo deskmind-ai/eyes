@@ -13,10 +13,10 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
+# Core: data preparation (prepare_*), the MLX quick start and ground_server (with the mlx extra), compare.
 dependencies = [
-    "tinker==0.29.0",
-    "tinker-cookbook==0.5.7",
     "pillow",
+    "huggingface-hub",
 ]
 
 [project.urls]
@@ -28,6 +28,11 @@ Issues = "https://github.com/deskmind-ai/eyes/issues"
 test = ["pytest>=8"]
 # Local Apple Silicon eval (deskmind_eyes/eval_mlx.py). Alternatively: `uv tool install mlx-vlm`.
 mlx = ["mlx-vlm>=0.7.1"]
+# Tinker SFT / RL / eval (train.py, rl.py, eval_tinker.py, evaluator.py, difficulty.py, export_ckpt.py).
+tinker = ["tinker==0.29.0", "tinker-cookbook==0.5.7"]
+# Hugging Face / PyTorch training and merging (train_hf.py, rl_hf.py, merge_hf_lora.py, dedup_uivision.py,
+# leaderboard/models). vLLM for eval_vllm / difficulty_vllm is installed separately (see README).
+hf = ["torch", "transformers", "peft", "safetensors", "numpy"]
 
 [tool.setuptools]
 packages = ["deskmind_eyes"]

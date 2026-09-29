@@ -11,7 +11,7 @@ uv run pytest -q                 # 提 PR 前必须通过
 ```
 
 - 测试不需要 GPU、模型或数据集，只检查排行榜适配器的提示词、缩放和解析与我们的实现完全一致（`tests/test_leaderboard_adapter.py`）。
-- 评测和训练需要装有 vLLM 0.19 的 CUDA GPU（`uv pip install "vllm==0.19.*"`）。MLX 路径（`eval_mlx`、`ground_server`）在 Apple Silicon Mac 上运行。
+- 评测和训练需要装有 vLLM 0.19 的 CUDA GPU（`uv pip install "vllm==0.19.*"`），以及 `hf` 扩展（`uv sync --extra hf`）；早期的 Tinker 流程需要 `tinker` 扩展。MLX 路径（`eval_mlx`、`ground_server`）在 Apple Silicon Mac 上运行。
 
 ## 复现评测
 

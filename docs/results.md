@@ -47,6 +47,15 @@ quoted here.
   - GUI-Owl-1.5-4B: 66.8;
   - Qwen-UI-Agent-4B: 67.8 (weights not released, so we could not run it).
 
+### Smallest targets (Pro, no zoom)
+
+| | quarter of targets with the smallest boxes | Creative icon |
+|---|---|---|
+| KV-Ground-4B | 46.6 | 46.9 |
+| **Eyes-4B** | 46.1 | 44.8 |
+
+Small targets are Eyes-4B's known gap: KV-Ground is level on the smallest quarter and ahead on Creative-app icons.
+
 ### ScreenSpot-v2 (1,272 items) and UI-Vision (5,479 items)
 
 | ScreenSpot-v2 | mobile text | mobile icon | desktop text | desktop icon | web text | web icon | **avg** |

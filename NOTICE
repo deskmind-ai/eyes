@@ -1,6 +1,13 @@
 DeskMind Eyes
 Copyright 2026 The DeskMind authors
 
-The code downloads third-party datasets (ScreenSpot, ScreenSpot-v2, ScreenSpot-Pro, UI-Vision, ShowUI, OS-Atlas,
-GroundCUA) and base models (Qwen3.5, GUI-Owl-1.5) from their sources at runtime. They are not redistributed here and
-remain under their own licences.
+The code downloads third-party datasets and base models from their sources at runtime. They are not redistributed
+here and remain under their own licences:
+
+- Qwen3.5 / Qwen3-VL (Alibaba Qwen), base models: Apache-2.0
+- GUI-Owl-1.5-4B-Instruct (mPLUG), base model of Eyes-4B: MIT
+- KV-Ground-4B: compared against only; not redistributed
+- OS-Atlas data: Apache-2.0
+- GroundCUA (ServiceNow): MIT
+- ShowUI-desktop (showlab): licence not stated upstream; asked in showlab/ShowUI#104
+- ScreenSpot-Pro, ScreenSpot-v2, UI-Vision: used for evaluation only, downloaded from their sources

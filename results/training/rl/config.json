@@ -1,5 +1,5 @@
 {
-  "log_path": "deskmind_eyes/runs/rl-showui-desktop",
+  "log_path": "runs/rl-showui-desktop",
   "model_name": "Qwen/Qwen3.5-4B",
   "renderer_name": "qwen3_5_disable_thinking",
   "init_state_path": null,

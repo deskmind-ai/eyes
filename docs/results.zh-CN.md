@@ -38,6 +38,15 @@
   - GUI-Owl-1.5-4B：66.8；
   - Qwen-UI-Agent-4B：67.8（未开放权重，我们无法复测）。
 
+### 最小的目标（Pro，不放大）
+
+| | 框最小的四分之一目标 | Creative icon |
+|---|---|---|
+| KV-Ground-4B | 46.6 | 46.9 |
+| **Eyes-4B** | 46.1 | 44.8 |
+
+小目标是 Eyes-4B 已知的短板：在框最小的四分之一目标上 KV-Ground 与之持平，在 Creative 类应用的 icon 上领先。
+
 ### ScreenSpot-v2（1,272 条）和 UI-Vision（5,479 条）
 
 | ScreenSpot-v2 | mobile text | mobile icon | desktop text | desktop icon | web text | web icon | **平均** |

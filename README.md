@@ -88,11 +88,14 @@ uv sync --extra mlx                     # Python 3.12; the mlx extra is for Appl
 uv run python -m deskmind_eyes.prepare_data --only screenspot_pro     # downloads and verifies every image
 ```
 
-**Local grounding server** (Apple Silicon). The Eyes-4B weights are not published yet. Build them from a training run
+**Local grounding server** (Apple Silicon). The Eyes-4B weights are on Hugging Face as
+[deskmind/eyes-4b](https://huggingface.co/deskmind/eyes-4b): bf16 on `main`, a 4-bit MLX conversion on the `mlx-4bit`
+branch. The repository is private until release; access on request. You can also build the weights from a training run
 (see [docs/training.md](docs/training.md)), or point `--model` at any MLX conversion of GUI-Owl-1.5-4B-Instruct to
 try the server:
 
 ```bash
+uv run hf download deskmind/eyes-4b --revision mlx-4bit --local-dir models/eyes-4b-mlx
 uv run python -m deskmind_eyes.ground_server --model models/eyes-4b-mlx --port 8010
 curl -s localhost:8010/ground -H 'Content-Type: application/json' \
   -d '{"image": "/abs/path/to/screenshot.png", "queries": {"send": "the send message button"}}'
@@ -114,7 +117,7 @@ mlx-vlm (slow at native Pro resolution). `leaderboard/` holds an adapter for the
 ## Training
 
 See [docs/training.md](docs/training.md). It covers:
-- the data sources: ShowUI-desktop, OS-Atlas desktop with rewritten instructions, and GroundCUA;
+- the data sources: ShowUI-desktop, [OS-Atlas desktop with rewritten instructions](docs/training.md#data) (see the disclosure there), and GroundCUA;
 - difficulty scoring and dynamic sampling;
 - the three RL rounds from 64.8 to 67.7;
 - what did not work.

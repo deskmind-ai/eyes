@@ -15,8 +15,9 @@ uv run pytest -q                 # must pass before you open a PR
 
 - The tests need no GPU, no model and no dataset. They check that the leaderboard adapter implements exactly our
   prompt, resize and parsing (`tests/test_leaderboard_adapter.py`).
-- Evaluating and training need a CUDA GPU with vLLM 0.19 (`uv pip install "vllm==0.19.*"`). The MLX paths
-  (`eval_mlx`, `ground_server`) run on an Apple Silicon Mac.
+- Evaluating and training need a CUDA GPU with vLLM 0.19 (`uv pip install "vllm==0.19.*"`) and the `hf` extra
+  (`uv sync --extra hf`); the earlier Tinker recipe needs the `tinker` extra. The MLX paths (`eval_mlx`,
+  `ground_server`) run on an Apple Silicon Mac.
 
 ## Reproducing an eval
 

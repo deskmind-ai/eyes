@@ -1,5 +1,5 @@
 {
-  "log_path": "deskmind_eyes/runs/sft-showui-desktop",
+  "log_path": "runs/sft-showui-desktop",
   "model_name": "Qwen/Qwen3.5-4B",
   "recipe_name": "deskmind_eyes_sft",
   "load_checkpoint_path": null,
