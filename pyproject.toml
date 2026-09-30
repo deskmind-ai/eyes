@@ -40,3 +40,8 @@ packages = ["deskmind_eyes"]
 [build-system]
 requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
+
+[tool.uv]
+# mlx-vlm and the Tinker cookbook pin incompatible transformers ranges: installed one at a time
+# (`uv sync --extra mlx` or `--extra tinker`), and a plain `uv run` from a clean clone resolves.
+conflicts = [[{ extra = "mlx" }, { extra = "tinker" }]]
