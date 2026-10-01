@@ -73,7 +73,7 @@ uv sync --extra mlx                     # Python 3.12；mlx 扩展用于 Apple S
 uv run python -m deskmind_eyes.prepare_data --only screenspot_pro     # 下载并逐张校验图片
 ```
 
-**本地定位服务**（Apple Silicon）。Eyes-4B 权重在 Hugging Face 上：[deskmind/eyes-4b](https://huggingface.co/deskmind/eyes-4b)，`main` 分支是 bf16，`mlx-4bit` 分支是 4-bit MLX 转换版。正式发布前该仓库为私有，可申请访问。也可以按 [docs/training.zh-CN.md](docs/training.zh-CN.md) 自己训练得到，或者先把 `--model` 指向 GUI-Owl-1.5-4B-Instruct 的任意 MLX 转换版来试用：
+**本地定位服务**（Apple Silicon）。Eyes-4B 权重在 Hugging Face 上：[deskmind/eyes-4b](https://huggingface.co/deskmind/eyes-4b)，`main` 分支是 bf16，`mlx-4bit` 分支是 4-bit MLX 转换版。也可以按 [docs/training.zh-CN.md](docs/training.zh-CN.md) 自己训练得到，或者先把 `--model` 指向 GUI-Owl-1.5-4B-Instruct 的任意 MLX 转换版来试用：
 
 ```bash
 uv run hf download deskmind/eyes-4b --revision mlx-4bit --local-dir models/eyes-4b-mlx

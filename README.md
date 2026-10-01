@@ -90,7 +90,7 @@ uv run python -m deskmind_eyes.prepare_data --only screenspot_pro     # download
 
 **Local grounding server** (Apple Silicon). The Eyes-4B weights are on Hugging Face as
 [deskmind/eyes-4b](https://huggingface.co/deskmind/eyes-4b): bf16 on `main`, a 4-bit MLX conversion on the `mlx-4bit`
-branch. The repository is private until release; access on request. You can also build the weights from a training run
+branch. You can also build the weights from a training run
 (see [docs/training.md](docs/training.md)), or point `--model` at any MLX conversion of GUI-Owl-1.5-4B-Instruct to
 try the server:
 
