@@ -1,0 +1,23 @@
+name: ci
+
+# The parts that run without a GPU or Apple Silicon: the point parser against expected values (the two parsers agreeing
+# is not enough), the leaderboard adapter matching our eval protocol, and the grounding server's token check.
+# Evaluations and training need a GPU or MLX and are run deliberately, not on every push.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - run: pip install -e . pytest
+      - run: python -m pytest -q tests
