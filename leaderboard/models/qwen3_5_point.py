@@ -50,13 +50,18 @@ def build_messages(image: Image.Image, instruction: str) -> list[dict]:
 
 
 def parse_response(text: str) -> tuple[float, float] | None:
-    """First [x, y] after any </think>; 0-1000 ints (or 0-1 floats) -> relative (0-1) point."""
+    """First [x, y] after any </think>; 0-1000 ints (or 0-1 floats, written with a decimal point) -> relative (0-1)
+    point. The scale is read from how the numbers are written, not their size ([1, 1] is the top-left corner);
+    outside 0-1000 is no answer."""
     m = _POINT_RE.search(text.split("</think>")[-1])
     if not m:
         return None
-    x, y = float(m.group(1)), float(m.group(2))
-    if x <= 1 and y <= 1:
+    vals = (m.group(1), m.group(2))
+    x, y = float(vals[0]), float(vals[1])
+    if all("." in v for v in vals) and 0 <= x <= 1 and 0 <= y <= 1:
         return x, y
+    if not (0 <= x <= 1000 and 0 <= y <= 1000):
+        return None
     return x / 1000, y / 1000
 
 

@@ -115,14 +115,23 @@ def format_answer(x_rel: float, y_rel: float) -> str:
 
 
 def parse_point(text: str) -> tuple[float, float] | None:
-    """Model output -> relative (0-1) point. Accepts 0-1000 ints or 0-1 floats."""
+    """Model output -> relative (0-1) point.
+
+    The scale is read from how the numbers are written, never from their size: the protocol is 0-1000 integers, so
+    [1, 1] is the top-left corner (0.001, 0.001), not the bottom-right; a value with a decimal point and both at most
+    1 is a 0-1 fraction. Anything outside the image (below 0, above 1000) is no answer (None).
+    """
     m = _POINT_RE.search(text.split("</think>")[-1])
-    if not m:
+    return _relative(m.group(1), m.group(2)) if m else None
+
+
+def _relative(*vals: str) -> tuple[float, ...] | None:
+    nums = [float(v) for v in vals]
+    if all("." in v for v in vals) and all(0 <= n <= 1 for n in nums):
+        return tuple(nums)
+    if not all(0 <= n <= 1000 for n in nums):
         return None
-    x, y = float(m.group(1)), float(m.group(2))
-    if x <= 1 and y <= 1:
-        return x, y
-    return x / 1000, y / 1000
+    return tuple(n / 1000 for n in nums)
 
 
 def parse_point_style(text: str, style: str) -> tuple[float, float] | None:
@@ -130,9 +139,11 @@ def parse_point_style(text: str, style: str) -> tuple[float, float] | None:
     if style == "bbox":
         m = _BOX_RE.search(text.split("</think>")[-1])
         if m:
-            x1, y1, x2, y2 = (float(v) for v in m.groups())
-            scale = 1 if max(x1, y1, x2, y2) <= 1 else 1000
-            return (x1 + x2) / 2 / scale, (y1 + y2) / 2 / scale
+            box = _relative(*m.groups())
+            if box is None:
+                return None
+            x1, y1, x2, y2 = box
+            return (x1 + x2) / 2, (y1 + y2) / 2
     return parse_point(text)
 
 
