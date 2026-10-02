@@ -66,6 +66,24 @@ pixels (`ground_server`'s default), greedy decoding, the point prompt. Apple M4 
   the Mac with another model server, so take the times as an upper bound.
 - Command: `python -m deskmind_eyes.eval_mlx <model> out.jsonl --benchmark screenspot_pro --max-pixels 2000000`.
 
+#### Resolution: 2 MP vs 4 MP
+
+How much of the gap is resolution: the same 4-bit weights on a 300-item subset (seed 0), at 2 MP (the app's
+setting) and at 4 MP.
+
+| same 300 items | all | text | icon | per query p50 | p95 | prompt tokens | peak memory |
+|---|---|---|---|---|---|---|---|
+| 2 MP | 49.3 | 63.1 | 23.8 | 4.7 s | 7.9 s | ~2,000 | 4.5 GB |
+| 4 MP | **59.0** | 73.8 | 31.4 | 11.9 s | 17.2 s | ~4,000 | 4.9 GB |
+
+- +9.7 points (42 items fixed, 13 broken, z = 3.9): most of the gap to the GPU number is resolution; the rest is
+  4-bit quantization and resolution beyond 4 MP.
+- About 2.5× slower per query. Both runs partly shared the Mac with another model server, so the absolute times
+  are upper bounds; the ratio between them holds.
+- Decision: the app (0.3.1) stays at 2 MP, since a vision step 7 s slower is a visible regression. Next is two-pass
+  grounding on the Mac: a coarse pass at 2 MP, then a crop around it (on the GPU, zoom 0.5 scores 77.5).
+- Command: add `--n 300` to the command above, with `--max-pixels 2000000` or `4000000`.
+
 ### Smallest targets (Pro, no zoom)
 
 | | quarter of targets with the smallest boxes | Creative icon |
