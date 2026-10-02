@@ -53,6 +53,11 @@ greedy decoding, native resolution, the Qwen3-VL `computer_use` tool prompt.
 | KV-Ground-4B, same setup | 66.1 | – |
 | **Eyes-4B** | **67.7** | **77.5** |
 
+**On the Mac, as the DeskMind app runs it** (4-bit MLX weights from the `mlx-4bit` branch, one pass, screenshots
+scaled to at most 2 MP, M4 Pro): **50.9** on the same 1,581 items (text 64.8, icon 28.3). The 67.7 above is the
+GPU setting and does not describe the app. The drop is mostly small icons, which a 4K screenshot scaled to 2 MP
+shrinks about fourfold. Per group, latency and memory: [docs/results.md](docs/results.md#as-the-mac-app-runs-it-4-bit-mlx-2-mp).
+
 - **No zoom** is the headline setting: one forward pass on the full screenshot.
   - Against the base: +2.9 (+81 / −34 items, z = 4.4).
   - Against KV-Ground-4B on the same setup: +1.6 (+68 / −42, z = 2.5).

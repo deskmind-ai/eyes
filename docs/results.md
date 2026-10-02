@@ -47,6 +47,25 @@ quoted here.
   - GUI-Owl-1.5-4B: 66.8;
   - Qwen-UI-Agent-4B: 67.8 (weights not released, so we could not run it).
 
+### As the Mac app runs it (4-bit MLX, ≤2 MP)
+
+The same 1,581 items with the weights and settings the DeskMind app uses: `deskmind/eyes-4b` at the `mlx-4bit`
+revision (de8e13b), mlx-vlm 0.7.4 from the app's own runtime, one pass, screenshots scaled to at most 2,000,000
+pixels (`ground_server`'s default), greedy decoding, the point prompt. Apple M4 Pro, 48 GB.
+
+| | CAD text | CAD icon | Creative text | Creative icon | Dev text | Dev icon | OS text | OS icon | Office text | Office icon | Scientific text | Scientific icon | **avg** |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Eyes-4B, GPU bf16, native (above) | 62.4 | 43.8 | 77.3 | 44.8 | 84.4 | 51.7 | 80.4 | 51.7 | 89.3 | 56.6 | 88.2 | 46.4 | 67.7 |
+| **Eyes-4B, Mac app: 4-bit MLX, ≤2 MP** | 38.6 | 23.4 | 64.6 | 21.7 | 74.0 | 26.2 | 65.4 | 30.3 | 75.1 | 41.5 | 77.8 | 34.5 | **50.9** |
+
+- Text targets 64.8, icon targets 28.3. Every answer parsed.
+- The loss is mostly icons (−20 to −28 points per group). ScreenSpot-Pro screenshots are mostly 4K-class, so 2 MP
+  is about a fourfold downscale and small icons lose the most. How much is resolution and how much quantization is
+  being measured.
+- Latency per query: p50 4.7 s, p95 7.8 s (about 2,000 prompt tokens); peak MLX memory 4.5 GB. Part of the run shared
+  the Mac with another model server, so take the times as an upper bound.
+- Command: `python -m deskmind_eyes.eval_mlx <model> out.jsonl --benchmark screenspot_pro --max-pixels 2000000`.
+
 ### Smallest targets (Pro, no zoom)
 
 | | quarter of targets with the smallest boxes | Creative icon |

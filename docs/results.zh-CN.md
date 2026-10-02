@@ -38,6 +38,20 @@
   - GUI-Owl-1.5-4B：66.8；
   - Qwen-UI-Agent-4B：67.8（未开放权重，我们无法复测）。
 
+### 按 Mac 应用的实际设置（4 位 MLX，≤200 万像素）
+
+同样 1,581 条，用 DeskMind 应用实际使用的权重和设置：`deskmind/eyes-4b` 的 `mlx-4bit` 版本（de8e13b），应用自带运行时里的 mlx-vlm 0.7.4，单次前向，截图缩到不超过 2,000,000 像素（`ground_server` 的默认值），贪心解码，point 提示词。Apple M4 Pro，48 GB。
+
+| | CAD text | CAD icon | Creative text | Creative icon | Dev text | Dev icon | OS text | OS icon | Office text | Office icon | Scientific text | Scientific icon | **平均** |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Eyes-4B，GPU bf16，原始分辨率（见上） | 62.4 | 43.8 | 77.3 | 44.8 | 84.4 | 51.7 | 80.4 | 51.7 | 89.3 | 56.6 | 88.2 | 46.4 | 67.7 |
+| **Eyes-4B，Mac 应用：4 位 MLX，≤200 万像素** | 38.6 | 23.4 | 64.6 | 21.7 | 74.0 | 26.2 | 65.4 | 30.3 | 75.1 | 41.5 | 77.8 | 34.5 | **50.9** |
+
+- 文字目标 64.8，图标目标 28.3；全部输出都能解析。
+- 掉分主要在图标（每组低 20–28 分）。ScreenSpot-Pro 的截图大多是 4K 级别，缩到 200 万像素约缩小四倍，小图标损失最大。分辨率和量化各占多少，正在测。
+- 每次定位耗时：中位数 4.7 秒，p95 7.8 秒（约 2,000 个提示词 token）；MLX 内存峰值 4.5 GB。测评期间部分时间和另一个模型服务同时运行，耗时按上限看。
+- 命令：`python -m deskmind_eyes.eval_mlx <model> out.jsonl --benchmark screenspot_pro --max-pixels 2000000`。
+
 ### 最小的目标（Pro，不放大）
 
 | | 框最小的四分之一目标 | Creative icon |
