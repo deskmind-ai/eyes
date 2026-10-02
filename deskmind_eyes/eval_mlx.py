@@ -29,6 +29,7 @@ def main():
     ap.add_argument("out")
     ap.add_argument("--benchmark", choices=BENCHMARKS, default="screenspot")
     ap.add_argument("--native", action="store_true", help="keep full resolution (slow for Pro)")
+    ap.add_argument("--max-pixels", type=int, help="pixel budget per image (the app's grounding server uses 2000000)")
     ap.add_argument("--n", type=int, help="random subset size (seed 0)")
     ap.add_argument("--prompt-style", choices=["point", "tool", "owl"], default="point")
     ap.add_argument("--zoom", type=float, default=0.0,
@@ -42,7 +43,7 @@ def main():
     args = ap.parse_args()
 
     samples = load_benchmark(args.benchmark)
-    max_pixels = NATIVE_MAX_PIXELS if args.native else MAX_PIXELS
+    max_pixels = args.max_pixels or (NATIVE_MAX_PIXELS if args.native else MAX_PIXELS)
     if args.n:
         samples = random.Random(0).sample(samples, args.n)
     key = lambda r: (r["img_filename"], r["instruction"])
